@@ -12,7 +12,7 @@ let currentPage = 'home';
 const mockUsers = [
     {
         id: 1,
-        name: "Sarah Johnson",
+        name: "Sara",
         email: "sarah@example.com",
         username: "sarah_secure",
         phone: "+1234567890",
@@ -28,12 +28,12 @@ const mockPosts = [
     {
         id: 1,
         user: {
-            name: "Emma Wilson",
-            username: "emma_safe",
+            name: "shru",
+            username: "shru_safe",
             avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150"
         },
         location: "Broadway Street, NYC",
-        image: "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "broadwaystreet.jpeg",
         caption: "Well-lit area with good security presence. Felt safe walking here at night! ✨ #SafeSpaces #NYC",
         likes: 124,
         comments: 23,
@@ -44,12 +44,12 @@ const mockPosts = [
     {
         id: 2,
         user: {
-            name: "Maria Garcia",
+            name: "Mary",
             username: "maria_secure",
             avatar: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150"
         },
         location: "Metro Station, Downtown",
-        image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "metro.jpeg",
         caption: "Poor lighting here after 9 PM. Be cautious and stay alert. Reported to authorities 📍 #StaySafe #ReportIncidents",
         likes: 87,
         comments: 15,
@@ -65,7 +65,7 @@ const mockPosts = [
             avatar: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150"
         },
         location: "University Campus",
-        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "campus.jpeg",
         caption: "Great security measures and well-maintained paths. Perfect for evening walks! 🚶‍♀️ #CampusSafety",
         likes: 203,
         comments: 31,
@@ -78,8 +78,8 @@ const mockPosts = [
 const mockLocations = [
     {
         id: 1,
-        name: "Central Park, NYC",
-        image: "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=400",
+        name: "Cetral Park, mysure",
+        image: "park.jpeg",
         rating: 4.2,
         reviews: 156,
         lighting: 4.5,
@@ -90,8 +90,8 @@ const mockLocations = [
     },
     {
         id: 2,
-        name: "University District",
-        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        name: "University campus",
+        image: "university.jpeg",
         rating: 3.8,
         reviews: 89,
         lighting: 3.5,
@@ -115,7 +115,7 @@ const mockLocations = [
     {
         id: 4,
         name: "Business District",
-        image: "https://images.pexels.com/photos/290595/pexels-photo-290595.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "business.jpeg",
         rating: 4.1,
         reviews: 127,
         lighting: 4.3,
@@ -129,20 +129,20 @@ const mockLocations = [
 const mockInstructors = [
     {
         id: 1,
-        name: "Jennifer Lee",
-        avatar: "https://images.pexels.com/photos/1379636/pexels-photo-1379636.jpeg?auto=compress&cs=tinysrgb&w=400",
+        name: "Jenny",
+        avatar: "jenny.jpeg",
         specialization: "Krav Maga",
         experience: "8 years",
         rating: 4.9,
         reviews: 145,
-        price: "$50/hour",
-        location: "Downtown Studio",
+        price: "₹100/hour",
+        location: "Downtown Studio(online available)",
         description: "Certified Krav Maga instructor with military background. Specializes in practical self-defense techniques."
     },
     {
         id: 2,
-        name: "Michelle Rodriguez",
-        avatar: "https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400",
+        name: "Manoj",
+        avatar: "manoj.jpeg",
         specialization: "Boxing & Kickboxing",
         experience: "6 years",
         rating: 4.7,
@@ -153,25 +153,25 @@ const mockInstructors = [
     },
     {
         id: 3,
-        name: "Amanda Chen",
-        avatar: "https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?auto=compress&cs=tinysrgb&w=400",
+        name: "Aman",
+        avatar: "aman.jpeg",
         specialization: "Martial Arts",
         experience: "12 years",
         rating: 4.8,
         reviews: 203,
-        price: "$40/hour",
-        location: "Martial Arts Academy",
+        price: "₹50/hour",
+        location: "Martial Arts Academy(online available)",
         description: "Black belt in multiple martial arts. Focus on building confidence and practical defense skills."
     },
     {
         id: 4,
-        name: "Rebecca Thompson",
-        avatar: "https://images.pexels.com/photos/1850595/pexels-photo-1850595.jpeg?auto=compress&cs=tinysrgb&w=400",
+        name: "Reena",
+        avatar: "reena.jpeg",
         specialization: "Personal Safety",
         experience: "5 years",
         rating: 4.6,
         reviews: 76,
-        price: "$35/hour",
+        price: "₹35/hour",
         location: "Mobile Training",
         description: "Personal safety expert with law enforcement background. Offers personalized training sessions."
     }
@@ -181,28 +181,28 @@ const mockExploreItems = [
     {
         id: 1,
         name: "Safe Zones Map",
-        image: "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "safemap.jpeg",
         rating: 4.5,
         type: "High Rated"
     },
     {
         id: 2,
         name: "Night Markets",
-        image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "streestal.jpeg",
         rating: 4.2,
         type: "Recent"
     },
     {
         id: 3,
         name: "Transit Hubs",
-        image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "metro.jpeg",
         rating: 3.8,
         type: "Nearby"
     },
     {
         id: 4,
         name: "Campus Areas",
-        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "campus.jpeg",
         rating: 4.7,
         type: "High Rated"
     }
