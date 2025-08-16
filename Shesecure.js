@@ -1,723 +1,782 @@
-// Dashboard functionality
-class Dashboard {
-    constructor() {
-        this.currentSection = 'home';
-        this.init();
+// SHESECURE - Women's Safety Platform JavaScript
+
+// Global Variables
+let currentUser = null;
+let isVoiceListening = false;
+let posts = [];
+let locations = [];
+let instructors = [];
+let currentPage = 'home';
+
+// Mock Data
+const mockUsers = [
+    {
+        id: 1,
+        name: "Sarah Johnson",
+        email: "sarah@example.com",
+        username: "sarah_secure",
+        phone: "+1234567890",
+        avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150",
+        location: "Downtown, Seattle",
+        safetyScore: 4.8,
+        posts: 156,
+        followers: 2100
     }
+];
 
-    init() {
-        this.setupNavigation();
-        this.setupModals();
-        this.setupHeaderActions();
-        this.loadSampleData();
+const mockPosts = [
+    {
+        id: 1,
+        user: {
+            name: "Emma Wilson",
+            username: "emma_safe",
+            avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location: "Broadway Street, NYC",
+        image: "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=400",
+        caption: "Well-lit area with good security presence. Felt safe walking here at night! ✨ #SafeSpaces #NYC",
+        likes: 124,
+        comments: 23,
+        safetyRating: 4.5,
+        timestamp: "2 hours ago",
+        isLiked: false
+    },
+    {
+        id: 2,
+        user: {
+            name: "Maria Garcia",
+            username: "maria_secure",
+            avatar: "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location: "Metro Station, Downtown",
+        image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400",
+        caption: "Poor lighting here after 9 PM. Be cautious and stay alert. Reported to authorities 📍 #StaySafe #ReportIncidents",
+        likes: 87,
+        comments: 15,
+        safetyRating: 2.1,
+        timestamp: "5 hours ago",
+        isLiked: false
+    },
+    {
+        id: 3,
+        user: {
+            name: "Priya Sharma",
+            username: "priya_safe",
+            avatar: "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location: "University Campus",
+        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        caption: "Great security measures and well-maintained paths. Perfect for evening walks! 🚶‍♀️ #CampusSafety",
+        likes: 203,
+        comments: 31,
+        safetyRating: 4.8,
+        timestamp: "1 day ago",
+        isLiked: true
     }
+];
 
-    setupNavigation() {
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const section = item.dataset.section;
-                this.switchSection(section);
-                
-                // Update active nav item
-                navItems.forEach(nav => nav.classList.remove('active'));
-                item.classList.add('active');
-            });
-        });
+const mockLocations = [
+    {
+        id: 1,
+        name: "Central Park, NYC",
+        image: "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.2,
+        reviews: 156,
+        lighting: 4.5,
+        crowdDensity: 3.8,
+        safetyScore: 4.2,
+        lastIncident: "2 months ago",
+        category: "Park"
+    },
+    {
+        id: 2,
+        name: "University District",
+        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 3.8,
+        reviews: 89,
+        lighting: 3.5,
+        crowdDensity: 4.2,
+        safetyScore: 3.8,
+        lastIncident: "1 week ago",
+        category: "Educational"
+    },
+    {
+        id: 3,
+        name: "Downtown Shopping Mall",
+        image: "https://images.pexels.com/photos/264507/pexels-photo-264507.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.6,
+        reviews: 234,
+        lighting: 4.8,
+        crowdDensity: 4.5,
+        safetyScore: 4.6,
+        lastIncident: "3 months ago",
+        category: "Shopping"
+    },
+    {
+        id: 4,
+        name: "Business District",
+        image: "https://images.pexels.com/photos/290595/pexels-photo-290595.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.1,
+        reviews: 127,
+        lighting: 4.3,
+        crowdDensity: 3.9,
+        safetyScore: 4.1,
+        lastIncident: "1 month ago",
+        category: "Business"
     }
+];
 
-    switchSection(sectionName) {
-        // Hide all sections
-        document.querySelectorAll('.content-section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        // Show target section
-        const targetSection = document.getElementById(`${sectionName}-section`);
-        if (targetSection) {
-            targetSection.classList.add('active');
-            this.currentSection = sectionName;
-            
-            // Load section-specific data
-            this.loadSectionData(sectionName);
-        }
+const mockInstructors = [
+    {
+        id: 1,
+        name: "Jennifer Lee",
+        avatar: "https://images.pexels.com/photos/1379636/pexels-photo-1379636.jpeg?auto=compress&cs=tinysrgb&w=400",
+        specialization: "Krav Maga",
+        experience: "8 years",
+        rating: 4.9,
+        reviews: 145,
+        price: "$50/hour",
+        location: "Downtown Studio",
+        description: "Certified Krav Maga instructor with military background. Specializes in practical self-defense techniques."
+    },
+    {
+        id: 2,
+        name: "Michelle Rodriguez",
+        avatar: "https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=400",
+        specialization: "Boxing & Kickboxing",
+        experience: "6 years",
+        rating: 4.7,
+        reviews: 98,
+        price: "Free",
+        location: "Community Center",
+        description: "Former professional boxer offering free self-defense classes to empower women in the community."
+    },
+    {
+        id: 3,
+        name: "Amanda Chen",
+        avatar: "https://images.pexels.com/photos/1391498/pexels-photo-1391498.jpeg?auto=compress&cs=tinysrgb&w=400",
+        specialization: "Martial Arts",
+        experience: "12 years",
+        rating: 4.8,
+        reviews: 203,
+        price: "$40/hour",
+        location: "Martial Arts Academy",
+        description: "Black belt in multiple martial arts. Focus on building confidence and practical defense skills."
+    },
+    {
+        id: 4,
+        name: "Rebecca Thompson",
+        avatar: "https://images.pexels.com/photos/1850595/pexels-photo-1850595.jpeg?auto=compress&cs=tinysrgb&w=400",
+        specialization: "Personal Safety",
+        experience: "5 years",
+        rating: 4.6,
+        reviews: 76,
+        price: "$35/hour",
+        location: "Mobile Training",
+        description: "Personal safety expert with law enforcement background. Offers personalized training sessions."
     }
+];
 
-    setupModals() {
-        // Modal triggers
-        document.getElementById('search-btn').addEventListener('click', () => {
-            this.showModal('search-modal');
-        });
-
-        document.getElementById('ai-guide-btn').addEventListener('click', () => {
-            this.showModal('ai-guide-modal');
-        });
-
-        document.getElementById('emergency-btn').addEventListener('click', () => {
-            this.showModal('emergency-modal');
-        });
-
-        document.querySelector('.create-post-btn').addEventListener('click', () => {
-            this.showModal('create-post-modal');
-        });
-
-        document.querySelector('.rate-location-btn').addEventListener('click', () => {
-            this.showModal('rating-modal');
-        });
-
-        document.querySelector('.become-instructor-btn').addEventListener('click', () => {
-            this.showModal('instructor-modal');
-        });
-
-        // Close modal functionality
-        document.querySelectorAll('.close-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                this.hideModals();
-            });
-        });
-
-        // Close on backdrop click
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    this.hideModals();
-                }
-            });
-        });
+const mockExploreItems = [
+    {
+        id: 1,
+        name: "Safe Zones Map",
+        image: "https://images.pexels.com/photos/590016/pexels-photo-590016.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.5,
+        type: "High Rated"
+    },
+    {
+        id: 2,
+        name: "Night Markets",
+        image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.2,
+        type: "Recent"
+    },
+    {
+        id: 3,
+        name: "Transit Hubs",
+        image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 3.8,
+        type: "Nearby"
+    },
+    {
+        id: 4,
+        name: "Campus Areas",
+        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.7,
+        type: "High Rated"
     }
+];
 
-    setupHeaderActions() {
-        // Voice activation for emergency
-        if ('webkitSpeechRecognition' in window) {
-            this.setupVoiceRecognition();
-        }
-    }
+// Chat responses for AI Guide
+const aiResponses = {
+    greetings: [
+        "Hello! I'm your AI Safety Guide. How can I help keep you safe today?",
+        "Hi there! I'm here to assist with your safety needs. What can I help you with?",
+        "Welcome! I'm your personal safety assistant. How may I assist you?"
+    ],
+    safety: [
+        "Based on current data, your area has a moderate safety rating. I recommend staying in well-lit areas and being aware of your surroundings.",
+        "The location you're asking about has good lighting and regular security patrols. It's generally considered safe.",
+        "This area has had some recent incidents. I'd suggest taking the alternate route I'm sending to your navigation."
+    ],
+    emergency: [
+        "I've detected this might be an emergency. I'm activating your emergency protocol and notifying your contacts.",
+        "Emergency mode activated. Your location has been shared with emergency services and your emergency contacts.",
+        "I'm here to help. If this is an emergency, say 'emergency now' and I'll immediately alert authorities."
+    ],
+    route: [
+        "I've calculated the safest route for you. It avoids low-light areas and recent incident zones.",
+        "Your route is being optimized for safety. I'll alert you of any changes in real-time.",
+        "I found a safer alternative route that adds only 3 minutes but avoids the construction zone."
+    ]
+};
 
-    setupVoiceRecognition() {
-        const recognition = new webkitSpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'en-US';
-
-        recognition.onresult = (event) => {
-            let transcript = '';
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-                transcript += event.results[i][0].transcript;
-            }
-            
-            // Check for emergency phrases
-            if (transcript.toLowerCase().includes('help') || 
-                transcript.toLowerCase().includes('emergency')) {
-                this.triggerEmergencyAlert();
-            }
-        };
-
-        // Start listening on page load (with user permission)
-        document.addEventListener('click', () => {
-            recognition.start();
-        }, { once: true });
-    }
-
-    showModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.add('active');
-            modal.style.display = 'flex';
-        }
-    }
-
-    hideModals() {
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.classList.remove('active');
-            modal.style.display = 'none';
-        });
-    }
-
-    loadSectionData(section) {
-        switch (section) {
-            case 'home':
-                this.loadSafetyFeed();
-                break;
-            case 'safety-ratings':
-                this.loadSafetyRatings();
-                break;
-            case 'safe-routes':
-                this.initializeMap();
-                break;
-            case 'community':
-                this.loadCommunityFeed();
-                break;
-            case 'self-defense':
-                this.loadInstructors();
-                break;
-            case 'risk-prediction':
-                this.loadRiskPrediction();
-                break;
-        }
-    }
-
-    loadSampleData() {
-        // Load initial home feed
-        this.loadSafetyFeed();
-    }
-
-    loadSafetyFeed() {
-        const postsContainer = document.getElementById('posts-container');
-        if (!postsContainer) return;
-
-        const samplePosts = [
-            {
-                id: 1,
-                user: {
-                    name: 'Sarah Johnson',
-                    avatar: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&fit=crop'
-                },
-                content: 'Just walked through Central Park at 8 PM. Well lit and plenty of people around. Felt very safe!',
-                location: 'Central Park, NYC',
-                safetyLevel: 'safe',
-                timestamp: '2 hours ago',
-                likes: 15,
-                comments: 3
-            },
-            {
-                id: 2,
-                user: {
-                    name: 'Emma Wilson',
-                    avatar: 'https://images.pexels.com/photos/594421/pexels-photo-594421.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&fit=crop'
-                },
-                content: 'Avoid the downtown subway station after 10 PM. Poor lighting and not many security personnel.',
-                location: 'Downtown Subway Station',
-                safetyLevel: 'caution',
-                timestamp: '5 hours ago',
-                likes: 28,
-                comments: 7
-            },
-            {
-                id: 3,
-                user: {
-                    name: 'Lisa Chen',
-                    avatar: 'https://images.pexels.com/photos/762020/pexels-photo-762020.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&fit=crop'
-                },
-                content: 'Great self-defense class today! Feeling more confident walking alone. Highly recommend learning basic techniques.',
-                location: 'Community Center',
-                safetyLevel: 'safe',
-                timestamp: '1 day ago',
-                likes: 42,
-                comments: 12
-            }
-        ];
-
-        postsContainer.innerHTML = samplePosts.map(post => this.createPostCard(post)).join('');
-    }
-
-    loadSafetyRatings() {
-        const ratingsGrid = document.getElementById('ratings-grid');
-        if (!ratingsGrid) return;
-
-        const sampleRatings = [
-            {
-                id: 1,
-                location: 'Central Park',
-                overallRating: 4.5,
-                lighting: 4,
-                crowdDensity: 5,
-                recentIncidents: 0,
-                reviews: 156
-            },
-            {
-                id: 2,
-                location: 'Times Square',
-                overallRating: 4.8,
-                lighting: 5,
-                crowdDensity: 5,
-                recentIncidents: 1,
-                reviews: 289
-            },
-            {
-                id: 3,
-                location: 'Brooklyn Bridge',
-                overallRating: 4.2,
-                lighting: 3,
-                crowdDensity: 4,
-                recentIncidents: 0,
-                reviews: 98
-            }
-        ];
-
-        ratingsGrid.innerHTML = sampleRatings.map(rating => this.createRatingCard(rating)).join('');
-    }
-
-    loadCommunityFeed() {
-        const mediaFeed = document.getElementById('media-feed');
-        if (!mediaFeed) return;
-
-        const sampleMedia = [
-            {
-                id: 1,
-                user: {
-                    name: 'Jessica Lee',
-                    avatar: 'https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&fit=crop'
-                },
-                content: 'New street lighting installed on 5th Avenue - much safer for evening walks!',
-                image: 'https://images.pexels.com/photos/327174/pexels-photo-327174.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-                location: '5th Avenue',
-                timestamp: '3 hours ago'
-            },
-            {
-                id: 2,
-                user: {
-                    name: 'Maria Garcia',
-                    avatar: 'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&fit=crop'
-                },
-                content: 'Security cameras added to this parking lot. Women can park here more safely now.',
-                image: 'https://images.pexels.com/photos/63294/autos-technology-vw-multi-storey-car-park-63294.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-                location: 'Main Street Parking',
-                timestamp: '1 day ago'
-            }
-        ];
-
-        mediaFeed.innerHTML = sampleMedia.map(media => this.createMediaCard(media)).join('');
-    }
-
-    loadInstructors() {
-        const instructorsGrid = document.getElementById('instructors-grid');
-        if (!instructorsGrid) return;
-
-        const sampleInstructors = [
-            {
-                id: 1,
-                name: 'Jennifer Adams',
-                specialization: 'Krav Maga',
-                experience: '8 years teaching experience',
-                location: 'Manhattan, NYC',
-                price: 'Free',
-                rating: 4.9,
-                students: 245,
-                skillLevel: 'All Levels'
-            },
-            {
-                id: 2,
-                name: 'Michelle Torres',
-                specialization: 'Karate & Self Defense',
-                experience: '12 years martial arts, 6 years teaching',
-                location: 'Brooklyn, NYC',
-                price: '$30/session',
-                rating: 4.7,
-                students: 156,
-                skillLevel: 'Beginner to Advanced'
-            },
-            {
-                id: 3,
-                name: 'Ashley Kim',
-                specialization: 'Women\'s Self Defense',
-                experience: '5 years specialized training',
-                location: 'Queens, NYC',
-                price: 'Free',
-                rating: 4.8,
-                students: 89,
-                skillLevel: 'Beginner'
-            }
-        ];
-
-        instructorsGrid.innerHTML = sampleInstructors.map(instructor => this.createInstructorCard(instructor)).join('');
-    }
-
-    loadRiskPrediction() {
-        // Simulate AI risk assessment
-        const currentTime = new Date().getHours();
-        let riskLevel, riskPercentage, riskClass;
-
-        if (currentTime >= 6 && currentTime <= 18) {
-            riskLevel = 'LOW';
-            riskPercentage = '25%';
-            riskClass = 'low';
-        } else if (currentTime >= 19 && currentTime <= 21) {
-            riskLevel = 'MEDIUM';
-            riskPercentage = '45%';
-            riskClass = 'medium';
-        } else {
-            riskLevel = 'HIGH';
-            riskPercentage = '70%';
-            riskClass = 'high';
-        }
-
-        // Update risk meter
-        const riskMeter = document.getElementById('current-risk-level');
-        if (riskMeter) {
-            riskMeter.className = `risk-level ${riskClass}`;
-            riskMeter.innerHTML = `
-                <span class="risk-text">${riskLevel}</span>
-                <span class="risk-percentage">${riskPercentage}</span>
-            `;
-        }
-
-        // Update risk factors
-        this.updateRiskFactors();
-        this.updateRecommendations();
-    }
-
-    updateRiskFactors() {
-        const factorsContainer = document.getElementById('risk-factors');
-        if (!factorsContainer) return;
-
-        const factors = [
-            'Time of day: Late evening increases risk',
-            'Location: Downtown area has higher incident rates',
-            'Weather: Clear conditions improve visibility',
-            'Day of week: Weekend nights have more activity'
-        ];
-
-        factorsContainer.innerHTML = factors.map(factor => 
-            `<div class="factor-item">${factor}</div>`
-        ).join('');
-    }
-
-    updateRecommendations() {
-        const recommendationsContainer = document.getElementById('recommendations-list');
-        if (!recommendationsContainer) return;
-
-        const recommendations = [
-            'Use well-lit main streets instead of side alleys',
-            'Consider taking a ride-share service after 10 PM',
-            'Inform someone of your planned route and arrival time',
-            'Keep phone charged and emergency contacts accessible'
-        ];
-
-        recommendationsContainer.innerHTML = recommendations.map(rec => 
-            `<div class="recommendation-item">${rec}</div>`
-        ).join('');
-    }
-
-    createPostCard(post) {
-        return `
-            <div class="post-card">
-                <div class="post-header">
-                    <img src="${post.user.avatar}" alt="${post.user.name}" class="user-avatar">
-                    <div class="post-meta">
-                        <div class="username">${post.user.name}</div>
-                        <div class="post-time">${post.timestamp}</div>
-                    </div>
-                    <div class="safety-badge ${post.safetyLevel}">${post.safetyLevel.toUpperCase()}</div>
-                </div>
-                <div class="post-content">${post.content}</div>
-                <div class="post-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    ${post.location}
-                </div>
-                <div class="post-actions">
-                    <button class="action-btn">
-                        <i class="fas fa-heart"></i>
-                        ${post.likes}
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-comment"></i>
-                        ${post.comments}
-                    </button>
-                    <button class="action-btn">
-                        <i class="fas fa-share"></i>
-                        Share
-                    </button>
-                </div>
-            </div>
-        `;
-    }
-
-    createRatingCard(rating) {
-        return `
-            <div class="rating-card">
-                <div class="card-header">
-                    <h3>${rating.location}</h3>
-                    <div class="overall-rating">
-                        ${this.createStars(rating.overallRating)}
-                        <span>${rating.overallRating}</span>
-                    </div>
-                </div>
-                <div class="rating-details">
-                    <div class="rating-detail">
-                        <span>Lighting:</span>
-                        ${this.createStars(rating.lighting)}
-                    </div>
-                    <div class="rating-detail">
-                        <span>Crowd Density:</span>
-                        ${this.createStars(rating.crowdDensity)}
-                    </div>
-                    <div class="rating-detail">
-                        <span>Recent Incidents:</span>
-                        <span class="${rating.recentIncidents === 0 ? 'text-green-600' : 'text-red-600'}">
-                            ${rating.recentIncidents}
-                        </span>
-                    </div>
-                </div>
-                <div class="rating-footer">
-                    <span>${rating.reviews} reviews</span>
-                </div>
-            </div>
-        `;
-    }
-
-    createMediaCard(media) {
-        return `
-            <div class="media-card">
-                <div class="post-header">
-                    <img src="${media.user.avatar}" alt="${media.user.name}" class="user-avatar">
-                    <div class="post-meta">
-                        <div class="username">${media.user.name}</div>
-                        <div class="post-time">${media.timestamp}</div>
-                    </div>
-                </div>
-                <div class="post-content">${media.content}</div>
-                <img src="${media.image}" alt="Community update" style="width: 100%; border-radius: 8px; margin: 10px 0;">
-                <div class="post-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    ${media.location}
-                </div>
-            </div>
-        `;
-    }
-
-    createInstructorCard(instructor) {
-        return `
-            <div class="instructor-card">
-                <div class="instructor-header">
-                    <h3>${instructor.name}</h3>
-                    <div class="instructor-rating">
-                        ${this.createStars(instructor.rating)}
-                        <span>${instructor.rating} (${instructor.students} students)</span>
-                    </div>
-                </div>
-                <div class="instructor-details">
-                    <p><strong>Specialization:</strong> ${instructor.specialization}</p>
-                    <p><strong>Experience:</strong> ${instructor.experience}</p>
-                    <p><strong>Location:</strong> ${instructor.location}</p>
-                    <p><strong>Skill Level:</strong> ${instructor.skillLevel}</p>
-                </div>
-                <div class="instructor-footer">
-                    <div class="price-tag">
-                        <strong>${instructor.price}</strong>
-                    </div>
-                    <button class="primary-btn">Contact Instructor</button>
-                </div>
-            </div>
-        `;
-    }
-
-    createStars(rating) {
-        const fullStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 !== 0;
-        let starsHTML = '';
-
-        for (let i = 0; i < fullStars; i++) {
-            starsHTML += '<i class="fas fa-star" style="color: #ffd700;"></i>';
-        }
-
-        if (hasHalfStar) {
-            starsHTML += '<i class="fas fa-star-half-alt" style="color: #ffd700;"></i>';
-        }
-
-        const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-        for (let i = 0; i < emptyStars; i++) {
-            starsHTML += '<i class="far fa-star" style="color: #ddd;"></i>';
-        }
-
-        return starsHTML;
-    }
-
-    triggerEmergencyAlert() {
-        // Show emergency modal
-        this.showModal('emergency-modal');
-        
-        // Simulate sending alerts
-        this.sendEmergencyAlert();
-    }
-
-    async sendEmergencyAlert() {
-        try {
-            // Get current location
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(async (position) => {
-                    const location = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-
-                    // In a real app, this would send to emergency services
-                    console.log('Emergency alert sent with location:', location);
-                    
-                    // Show confirmation
-                    alert('Emergency alert sent to authorities and emergency contacts!');
-                });
-            }
-        } catch (error) {
-            console.error('Emergency alert failed:', error);
-        }
-    }
-
-    initializeMap() {
-        // This will be called when Google Maps is loaded
-        if (typeof google !== 'undefined' && google.maps) {
-            const map = new google.maps.Map(document.getElementById('google-map'), {
-                center: { lat: 40.7128, lng: -74.0060 }, // NYC
-                zoom: 13,
-                styles: [
-                    {
-                        featureType: 'poi.business',
-                        stylers: [{ visibility: 'off' }]
-                    }
-                ]
-            });
-
-            // Add sample safe route markers
-            const safeLocations = [
-                { lat: 40.7589, lng: -73.9851, title: 'Times Square (Safe Zone)' },
-                { lat: 40.7505, lng: -73.9934, title: 'Herald Square (Safe Zone)' },
-                { lat: 40.7614, lng: -73.9776, title: 'Bryant Park (Safe Zone)' }
-            ];
-
-            safeLocations.forEach(location => {
-                new google.maps.Marker({
-                    position: location,
-                    map: map,
-                    title: location.title,
-                    icon: {
-                        url: 'data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="%2322c55e"><circle cx="12" cy="12" r="10"/></svg>',
-                        scaledSize: new google.maps.Size(30, 30)
-                    }
-                });
-            });
-
-            // Set up route planning
-            const directionsService = new google.maps.DirectionsService();
-            const directionsRenderer = new google.maps.DirectionsRenderer({
-                draggable: true,
-                polylineOptions: {
-                    strokeColor: '#7e57c2',
-                    strokeWeight: 5
-                }
-            });
-            directionsRenderer.setMap(map);
-
-            document.getElementById('find-safe-route').addEventListener('click', () => {
-                this.calculateSafeRoute(directionsService, directionsRenderer);
-            });
-        }
-    }
-
-    calculateSafeRoute(directionsService, directionsRenderer) {
-  const start = document.getElementById('start-location').value;
-  const end = document.getElementById('end-location').value;
-
-  const avoidDarkAreas = document.getElementById('avoid-dark-areas').checked;
-  const preferCrowded = document.getElementById('prefer-crowded').checked;
-  const avoidIncidents = document.getElementById('avoid-incidents').checked;
-
-  if (!start || !end) {
-    alert('Please enter both starting location and destination');
-    return;
-  }
-
-  // these preferences to adjust route logic or scoring
-  this.userPreferences = { avoidDarkAreas, preferCrowded, avoidIncidents };
-
-  directionsService.route({
-    origin: start,
-    destination: end,
-    travelMode: google.maps.TravelMode.WALKING,
-    avoidHighways: true,
-    avoidTolls: true
-  }, (response, status) => {
-    if (status === 'OK') {
-      directionsRenderer.setDirections(response);
-      this.analyzeRouteSafety(response);
-    } else {
-      alert('Directions request failed: ' + status);
-    }
-  });
-}
-
-analyzeRouteSafety(route) {
-  const prefs = this.userPreferences || {};
-  const hour = new Date().getHours();
-  const isNight = hour < 6 || hour > 18;
-
-  // Base safety score logic
-  let safetyScore = 60;
-  if (prefs.avoidDarkAreas) safetyScore += 10;
-  if (prefs.preferCrowded) safetyScore += 10;
-  if (prefs.avoidIncidents) safetyScore += 10;
-  if (isNight) safetyScore -= 20;
-  safetyScore += Math.random() * 10;
-
-  // Determine safety level
-  let safetyLevel, message, color, emoji;
-  if (safetyScore > 75) {
-    safetyLevel = 'High';
-    message = '🟢 This route is well-lit and frequently traveled.';
-    color = '#22c55e';
-    emoji = '🟢';
-  } else if (safetyScore > 50) {
-    safetyLevel = 'Medium';
-    message = '🟠 This route has some areas with lower lighting or fewer people.';
-    color = '#f59e0b';
-    emoji = '🟠';
-  } else {
-    safetyLevel = 'Low';
-    message = '🔴 Consider taking an alternative route or using a safer mode of transport.';
-    color = '#ef4444';
-    emoji = '🔴';
-  }
-
-  // Store route details for reporting
-  this.lastRouteDetails = {
-    start: document.getElementById('start-location').value,
-    end: document.getElementById('end-location').value,
-    duration: route.routes[0].legs[0].duration.text,
-    safetyScore,
-    safetyLevel,
-    preferences: prefs
-  };
-
-  // Create analysis UI
-  const analysisDiv = document.createElement('div');
-  analysisDiv.className = 'route-analysis';
-  analysisDiv.innerHTML = `
-    <div style="background: #fff; padding: 16px; border-radius: 8px; margin-top: 20px; border-left: 5px solid ${color}; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-      <h3 style="margin-bottom: 10px;">Route Safety Analysis</h3>
-      <p><strong>Safety Level:</strong> <span style="color: ${color}; font-weight: bold;">${emoji} ${safetyLevel}</span></p>
-      <p>${message}</p>
-      <p><strong>Estimated Walking Time:</strong> ${this.lastRouteDetails.duration}</p>
-      <p><strong>Your Preferences:</strong></p>
-      <ul>
-        <li>Avoid dark areas: ${prefs.avoidDarkAreas ? '✅' : '❌'}</li>
-        <li>Prefer crowded areas: ${prefs.preferCrowded ? '✅' : '❌'}</li>
-        <li>Avoid recent incidents: ${prefs.avoidIncidents ? '✅' : '❌'}</li>
-      </ul>
-      <button onclick="dashboard.reportUnsafeRoute()" style="margin-top: 12px; padding: 10px 14px; background-color: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">🚨 Report Unsafe</button>
-    </div>
-  `;
-
-  const mapContainer = document.getElementById('map-container');
-  const existingAnalysis = mapContainer.querySelector('.route-analysis');
-  if (existingAnalysis) {
-    existingAnalysis.remove();
-  }
-
-  mapContainer.appendChild(analysisDiv);
-}
-
-reportUnsafeRoute() {
-  alert("Thanks for your feedback. We'll review this route.");
-}
-}
-document.getElementById('find-safe-route').addEventListener('click', () => {
-  dashboard.calculateSafeRoute(directionsService, directionsRenderer);
+// Initialize App
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    showLoadingSpinner();
+    
+    // Simulate app loading
+    setTimeout(() => {
+        hideLoadingSpinner();
+        showAuthModal();
+    }, 2000);
 });
 
-// Initialize dashboard
-window.dashboard = new Dashboard();
+function initializeApp() {
+    posts = mockPosts;
+    locations = mockLocations;
+    instructors = mockInstructors;
+    
+    setupEventListeners();
+    loadHomeFeed();
+    loadExploreContent();
+    loadSafetyDashboard();
+    loadInstructors();
+    loadProfile();
+}
 
-// Global function for Google Maps callback
-window.initMap = function() {
-    if (window.dashboard) {
-        window.dashboard.initializeMap();
+function setupEventListeners() {
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = item.dataset.page;
+            switchPage(page);
+        });
+    });
+    
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', handleSearch);
     }
-};
+    
+    // Voice activation for emergency
+    if ('webkitSpeechRecognition' in window) {
+        setupVoiceRecognition();
+    }
+    
+    // Chat input
+    const chatInput = document.getElementById('chatInput');
+    if (chatInput) {
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    }
+}
+
+// Loading Spinner
+function showLoadingSpinner() {
+    document.getElementById('loadingSpinner').classList.remove('hidden');
+}
+
+function hideLoadingSpinner() {
+    document.getElementById('loadingSpinner').classList.add('hidden');
+}
+
+// Authentication
+function showAuthModal() {
+    document.getElementById('authModal').classList.remove('hidden');
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+}
+
+function closeAuthModal() {
+    document.getElementById('authModal').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    // Simulate login
+    currentUser = mockUsers[0];
+}
+
+function showLogin() {
+    document.getElementById('loginForm').classList.remove('hidden');
+    document.getElementById('registerForm').classList.add('hidden');
+}
+
+function showRegister() {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('registerForm').classList.remove('hidden');
+}
+
+// Navigation
+function switchPage(pageName) {
+    // Update navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+    
+    // Update pages
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    document.getElementById(`${pageName}Page`).classList.add('active');
+    
+    currentPage = pageName;
+    
+    // Load page-specific content
+    switch(pageName) {
+        case 'home':
+            loadHomeFeed();
+            break;
+        case 'explore':
+            loadExploreContent();
+            break;
+        case 'safety':
+            loadSafetyDashboard();
+            break;
+        case 'defense':
+            loadInstructors();
+            break;
+        case 'profile':
+            loadProfile();
+            break;
+    }
+}
+
+// Home Feed
+function loadHomeFeed() {
+    const container = document.getElementById('postsContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    posts.forEach(post => {
+        const postElement = createPostElement(post);
+        container.appendChild(postElement);
+    });
+}
+
+function createPostElement(post) {
+    const postDiv = document.createElement('div');
+    postDiv.className = 'post';
+    
+    const starsHtml = generateStars(post.safetyRating);
+    const heartIcon = post.isLiked ? 'fas fa-heart' : 'far fa-heart';
+    const heartColor = post.isLiked ? 'color: #EF4444;' : '';
+    
+    postDiv.innerHTML = `
+        <div class="post-header">
+            <div class="post-avatar">
+                <img src="${post.user.avatar}" alt="${post.user.name}">
+            </div>
+            <div class="post-user">
+                <h4>${post.user.name}</h4>
+                <p><i class="fas fa-map-marker-alt"></i> ${post.location}</p>
+            </div>
+            <div class="post-actions">
+                <button><i class="fas fa-ellipsis-v"></i></button>
+            </div>
+        </div>
+        <img src="${post.image}" alt="Post image" class="post-image">
+        <div class="post-content">
+            <div class="post-rating">
+                <span class="rating-stars">${starsHtml}</span>
+                <span class="rating-score">${post.safetyRating}</span>
+            </div>
+            <p class="post-caption">${post.caption}</p>
+            <div class="post-meta">
+                <div class="post-interactions">
+                    <div class="interaction" onclick="toggleLike(${post.id})">
+                        <i class="${heartIcon}" style="${heartColor}"></i>
+                        <span>${post.likes}</span>
+                    </div>
+                    <div class="interaction">
+                        <i class="far fa-comment"></i>
+                        <span>${post.comments}</span>
+                    </div>
+                    <div class="interaction">
+                        <i class="far fa-share-square"></i>
+                        <span>Share</span>
+                    </div>
+                </div>
+                <span class="post-time">${post.timestamp}</span>
+            </div>
+        </div>
+    `;
+    
+    return postDiv;
+}
+
+function toggleLike(postId) {
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+        post.isLiked = !post.isLiked;
+        post.likes += post.isLiked ? 1 : -1;
+        loadHomeFeed(); // Refresh feed
+    }
+}
+
+// Explore Content
+function loadExploreContent() {
+    const container = document.getElementById('exploreGrid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    mockExploreItems.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'explore-item';
+        itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="explore-image">
+            <div class="explore-overlay">
+                <div class="explore-name">${item.name}</div>
+                <div class="explore-rating">
+                    <i class="fas fa-star"></i>
+                    <span>${item.rating}</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(itemElement);
+    });
+}
+
+// Safety Dashboard
+function loadSafetyDashboard() {
+    const container = document.getElementById('locationRatings');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    locations.forEach(location => {
+        const locationElement = createLocationCard(location);
+        container.appendChild(locationElement);
+    });
+}
+
+function createLocationCard(location) {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'location-card';
+    
+    cardDiv.innerHTML = `
+        <img src="${location.image}" alt="${location.name}" class="location-image">
+        <div class="location-info">
+            <div class="location-header">
+                <div>
+                    <h3 class="location-name">${location.name}</h3>
+                    <div class="location-rating">
+                        <span class="rating-stars">${generateStars(location.rating)}</span>
+                        <span class="rating-number">${location.rating}</span>
+                        <span class="rating-reviews">(${location.reviews} reviews)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="location-metrics">
+                <div class="metric">
+                    <div class="metric-value">${location.lighting}</div>
+                    <div class="metric-label">Lighting</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">${location.crowdDensity}</div>
+                    <div class="metric-label">Crowd</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value">${location.safetyScore}</div>
+                    <div class="metric-label">Safety</div>
+                </div>
+            </div>
+            <p class="last-incident">Last incident: ${location.lastIncident}</p>
+        </div>
+    `;
+    
+    return cardDiv;
+}
+
+// Instructors
+function loadInstructors() {
+    const container = document.getElementById('instructorsGrid');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    instructors.forEach(instructor => {
+        const instructorElement = createInstructorCard(instructor);
+        container.appendChild(instructorElement);
+    });
+}
+
+function createInstructorCard(instructor) {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'instructor-card';
+    
+    const priceClass = instructor.price === 'Free' ? 'free' : '';
+    
+    cardDiv.innerHTML = `
+        <img src="${instructor.avatar}" alt="${instructor.name}" class="instructor-avatar">
+        <div class="instructor-info">
+            <h3 class="instructor-name">${instructor.name}</h3>
+            <p class="instructor-specialty">${instructor.specialization}</p>
+            <div class="instructor-details">
+                <span class="instructor-rating">
+                    <i class="fas fa-star"></i> ${instructor.rating} (${instructor.reviews})
+                </span>
+                <span>${instructor.experience} exp</span>
+            </div>
+            <div class="instructor-price ${priceClass}">${instructor.price}</div>
+            <p style="font-size: 14px; color: #666; margin-bottom: 15px;">${instructor.description}</p>
+            <button class="book-btn" onclick="bookInstructor(${instructor.id})">
+                ${instructor.price === 'Free' ? 'Join Free Class' : 'Book Session'}
+            </button>
+        </div>
+    `;
+    
+    return cardDiv;
+}
+
+function bookInstructor(instructorId) {
+    const instructor = instructors.find(i => i.id === instructorId);
+    if (instructor) {
+        alert(`Booking session with ${instructor.name}. You'll be redirected to the booking page.`);
+    }
+}
+
+// Profile
+function loadProfile() {
+    const container = document.getElementById('profileGrid');
+    if (!container) return;
+    
+    // Load user's posts in grid format
+    container.innerHTML = '';
+    
+    const userPosts = posts.filter(post => post.user.name === currentUser?.name);
+    userPosts.forEach(post => {
+        const postElement = document.createElement('div');
+        postElement.className = 'profile-post';
+        postElement.style.cssText = `
+            aspect-ratio: 1;
+            background-image: url(${post.image});
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        `;
+        postElement.addEventListener('mouseover', () => {
+            postElement.style.transform = 'scale(1.05)';
+        });
+        postElement.addEventListener('mouseout', () => {
+            postElement.style.transform = 'scale(1)';
+        });
+        container.appendChild(postElement);
+    });
+    
+    // Add some placeholder posts
+    for (let i = 0; i < 6; i++) {
+        const postElement = document.createElement('div');
+        postElement.className = 'profile-post';
+        postElement.style.cssText = `
+            aspect-ratio: 1;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 24px;
+        `;
+        postElement.innerHTML = '<i class="fas fa-image"></i>';
+        container.appendChild(postElement);
+    }
+}
+
+// Emergency Functions
+function triggerEmergency() {
+    if (confirm('This will send an emergency alert to authorities and your emergency contacts. Continue?')) {
+        alert('🚨 EMERGENCY ALERT SENT!\n\n✅ Location shared with emergency services\n✅ Emergency contacts notified\n✅ Audio recording started\n\nHelp is on the way!');
+        
+        // Simulate emergency protocol
+        addAIMessage("Emergency protocol activated! I've notified emergency services and your contacts. Your location has been shared. Stay calm and stay on the line.");
+        openAIGuide();
+    }
+}
+
+function openSafeRoute() {
+    alert('🗺️ SAFE ROUTE ACTIVATED!\n\n✅ Calculating safest path\n✅ Avoiding risk zones\n✅ Real-time monitoring enabled\n\nYour safe route is being prepared...');
+    addAIMessage("I'm calculating the safest route for you. This will avoid poorly lit areas and recent incident zones. Your route will be ready in a moment.");
+    openAIGuide();
+}
+
+function activateVoiceAlert() {
+    if (!isVoiceListening) {
+        isVoiceListening = true;
+        alert('🎤 VOICE ALERT ACTIVATED!\n\nSay "HELP ME" or "EMERGENCY" for immediate assistance.\nVoice recognition is now active...');
+        
+        // Start voice recognition if available
+        if ('webkitSpeechRecognition' in window) {
+            startVoiceRecognition();
+        }
+    } else {
+        isVoiceListening = false;
+        alert('Voice alert deactivated.');
+    }
+}
+
+// Voice Recognition
+function setupVoiceRecognition() {
+    window.recognition = new webkitSpeechRecognition();
+    window.recognition.continuous = true;
+    window.recognition.interimResults = true;
+    
+    window.recognition.onresult = function(event) {
+        const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase();
+        
+        if (transcript.includes('help') || transcript.includes('emergency')) {
+            triggerEmergency();
+        }
+    };
+}
+
+function startVoiceRecognition() {
+    if (window.recognition && isVoiceListening) {
+        window.recognition.start();
+    }
+}
+
+// AI Guide
+function openAIGuide() {
+    document.getElementById('aiGuideModal').classList.remove('hidden');
+}
+
+function closeAIGuide() {
+    document.getElementById('aiGuideModal').classList.add('hidden');
+}
+
+function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Add user message
+    addUserMessage(message);
+    input.value = '';
+    
+    // Simulate AI response
+    setTimeout(() => {
+        const response = generateAIResponse(message);
+        addAIMessage(response);
+    }, 1000);
+}
+
+function addUserMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message user-message';
+    messageDiv.innerHTML = `
+        <div class="message-content">${message}</div>
+        <div class="message-time">Just now</div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function addAIMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message ai-message';
+    messageDiv.innerHTML = `
+        <div class="message-content">${message}</div>
+        <div class="message-time">Just now</div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function generateAIResponse(userMessage) {
+    const message = userMessage.toLowerCase();
+    
+    if (message.includes('emergency') || message.includes('help')) {
+        return aiResponses.emergency[Math.floor(Math.random() * aiResponses.emergency.length)];
+    } else if (message.includes('route') || message.includes('navigation')) {
+        return aiResponses.route[Math.floor(Math.random() * aiResponses.route.length)];
+    } else if (message.includes('safe') || message.includes('danger') || message.includes('area')) {
+        return aiResponses.safety[Math.floor(Math.random() * aiResponses.safety.length)];
+    } else {
+        return aiResponses.greetings[Math.floor(Math.random() * aiResponses.greetings.length)];
+    }
+}
+
+// Search Functionality
+function handleSearch(event) {
+    const query = event.target.value.toLowerCase();
+    
+    if (query.length < 2) return;
+    
+    // Simple search implementation
+    console.log('Searching for:', query);
+    
+    // You can implement more sophisticated search here
+    // This could search through posts, locations, instructors, etc.
+}
+
+// Utility Functions
+function generateStars(rating) {
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    let starsHtml = '';
+    
+    for (let i = 0; i < fullStars; i++) {
+        starsHtml += '<i class="fas fa-star"></i>';
+    }
+    
+    if (hasHalfStar) {
+        starsHtml += '<i class="fas fa-star-half-alt"></i>';
+    }
+    
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+    for (let i = 0; i < emptyStars; i++) {
+        starsHtml += '<i class="far fa-star"></i>';
+    }
+    
+    return starsHtml;
+}
+
+function openAddInstructor() {
+    alert('📚 BECOME AN INSTRUCTOR\n\nJoin our community of self-defense instructors!\n\n• Share your expertise\n• Set your own rates\n• Help empower women\n\nRedirecting to instructor registration...');
+}
+
+// Initialize Firebase (Mock)
+function initializeFirebase() {
+    // This is where you would initialize Firebase
+    // const firebaseConfig = { ... };
+    // firebase.initializeApp(firebaseConfig);
+    console.log('Firebase initialized (mock)');
+}
+
+// Export functions for global access
+window.closeAuthModal = closeAuthModal;
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+window.triggerEmergency = triggerEmergency;
+window.openSafeRoute = openSafeRoute;
+window.activateVoiceAlert = activateVoiceAlert;
+window.openAIGuide = openAIGuide;
+window.closeAIGuide = closeAIGuide;
+window.sendMessage = sendMessage;
+window.toggleLike = toggleLike;
+window.bookInstructor = bookInstructor;
+window.openAddInstructor = openAddInstructor;

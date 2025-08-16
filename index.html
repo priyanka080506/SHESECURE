@@ -4,476 +4,346 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHESECURE - Women's Safety Platform</title>
-    <link rel="stylesheet" href="Shesecure.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Dashboard Section -->
-    <div id="dashboard-container" class="dashboard-container hidden">
-        <!-- Header -->
-        <header class="dashboard-header">
-            <div class="header-content">
-                <h1 class="logo">SHESECURE</h1>
-                
-                <div class="header-actions">
-                    <button id="search-btn" class="icon-btn">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button id="ai-guide-btn" class="icon-btn ai-btn">
-                        <i class="fas fa-robot"></i>
-                    </button>
-                    <button id="emergency-btn" class="icon-btn emergency-btn">
-                        <i class="fas fa-bell"></i>
-                    </button>
-                    <div class="user-profile">
-                        <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=50&h=50&fit=crop" alt="Profile" class="profile-img">
-                        <span id="user-name">User</span>
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form">
+                <div class="auth-header">
+                    <h2><i class="fas fa-shield-alt"></i> SHESECURE</h2>
+                    <p>Your safety, our priority</p>
+                </div>
+                <form>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Email" required>
                     </div>
-                    <button id="logout-btn" class="logout-btn">Logout</button>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Sign In</button>
+                </form>
+                <p class="auth-switch">Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+            </div>
+
+            <!-- Register Form -->
+            <div id="registerForm" class="auth-form hidden">
+                <div class="auth-header">
+                    <h2><i class="fas fa-shield-alt"></i> SHESECURE</h2>
+                    <p>Join our safety community</p>
+                </div>
+                <form>
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" placeholder="Full Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" placeholder="Phone Number" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Register</button>
+                </form>
+                <p class="auth-switch">Already have an account? <a href="#" onclick="showLogin()">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="hidden">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-left">
+                    <h1 class="logo"><i class="fas fa-shield-alt"></i> SHESECURE</h1>
+                </div>
+                <div class="header-center">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search locations, people..." id="searchInput">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="emergency-btn" onclick="triggerEmergency()">
+                        <i class="fas fa-exclamation-triangle"></i> SOS
+                    </button>
+                    <div class="user-avatar">
+                        <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150" alt="User">
+                    </div>
                 </div>
             </div>
         </header>
-        
-        <div class="dashboard-layout">
-            <!-- Sidebar -->
-            <nav class="sidebar">
-                <div class="nav-items">
-                    <button class="nav-item active" data-section="home">
-                        <i class="fas fa-home"></i>
-                        <span>Home</span>
-                    </button>
-                    <button class="nav-item" data-section="safety-ratings">
-                        <i class="fas fa-star"></i>
-                        <span>Safety Ratings</span>
-                    </button>
-                    <button class="nav-item" data-section="safe-routes">
-                        <i class="fas fa-route"></i>
-                        <span>Safe Routes</span>
-                    </button>
-                    <button class="nav-item" data-section="community">
-                        <i class="fas fa-users"></i>
-                        <span>Community</span>
-                    </button>
-                    <button class="nav-item" data-section="self-defense">
-                        <i class="fas fa-fist-raised"></i>
-                        <span>Self Defense</span>
-                    </button>
-                    <button class="nav-item" data-section="risk-prediction">
-                        <i class="fas fa-brain"></i>
-                        <span>AI Risk Prediction</span>
-                    </button>
-                </div>
-            </nav>
-            
-            <!-- Main Content -->
-            <main class="main-content">
-                <!-- Home Section -->
-                <div id="home-section" class="content-section active">
-                    <div class="section-header">
-                        <h2>Safety Feed</h2>
-                        <button class="create-post-btn">
+
+        <!-- Navigation -->
+        <nav class="bottom-nav">
+            <a href="#" class="nav-item active" data-page="home">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" data-page="explore">
+                <i class="fas fa-compass"></i>
+                <span>Explore</span>
+            </a>
+            <a href="#" class="nav-item" data-page="safety">
+                <i class="fas fa-shield-alt"></i>
+                <span>Safety</span>
+            </a>
+            <a href="#" class="nav-item" data-page="defense">
+                <i class="fas fa-fist-raised"></i>
+                <span>Defense</span>
+            </a>
+            <a href="#" class="nav-item" data-page="profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page -->
+            <div id="homePage" class="page active">
+                <!-- Stories Section -->
+                <div class="stories-container">
+                    <div class="story add-story">
+                        <div class="story-avatar">
                             <i class="fas fa-plus"></i>
-                            Share Safety Update
-                        </button>
-                    </div>
-                    
-                    <div class="posts-container" id="posts-container">
-                        <!-- Posts will be dynamically loaded -->
-                    </div>
-                </div>
-                
-                <!-- Safety Ratings Section -->
-                <div id="safety-ratings-section" class="content-section">
-                    <div class="section-header">
-                        <h2>Location Safety Ratings</h2>
-                        <button class="rate-location-btn">
-                            <i class="fas fa-plus"></i>
-                            Rate Location
-                        </button>
-                    </div>
-                    
-                    <div class="filters">
-                        <select id="rating-filter">
-                            <option value="all">All Ratings</option>
-                            <option value="5">Excellent (5 stars)</option>
-                            <option value="4">Good (4 stars)</option>
-                            <option value="3">Average (3 stars)</option>
-                            <option value="2">Poor (2 stars)</option>
-                            <option value="1">Dangerous (1 star)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="ratings-grid" id="ratings-grid">
-                        <!-- Safety ratings will be loaded here -->
-                    </div>
-                </div>
-                
-                <!-- Safe Routes Section -->
-                <div id="safe-routes-section" class="content-section">
-                    <div class="section-header">
-                        <h2>Safe Route Navigation</h2>
-                    </div>
-                    
-                    <div class="route-planner">
-                        <div class="route-inputs">
-                            <input type="text" id="start-location" placeholder="Starting location">
-                            <input type="text" id="end-location" placeholder="Destination">
-                            <button id="find-safe-route" class="primary-btn">Find Safe Route</button>
                         </div>
-                        
-                        <div class="route-options">
-                            <label>
-                                <input type="checkbox" id="avoid-dark-areas" checked>
-                                Avoid poorly lit areas
-                            </label>
-                            <label>
-                                <input type="checkbox" id="prefer-crowded" checked>
-                                Prefer crowded areas
-                            </label>
-                            <label>
-                                <input type="checkbox" id="avoid-incidents" checked>
-                                Avoid areas with recent incidents
-                            </label>
+                        <span>Your Story</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=150" alt="Story">
+                        </div>
+                        <span>Emma</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150" alt="Story">
+                        </div>
+                        <span>Maria</span>
+                    </div>
+                    <div class="story">
+                        <div class="story-avatar">
+                            <img src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=150" alt="Story">
+                        </div>
+                        <span>Priya</span>
+                    </div>
+                </div>
+
+                <!-- AI Guide Section -->
+                <div class="ai-guide-card">
+                    <div class="ai-guide-header">
+                        <i class="fas fa-robot"></i>
+                        <div>
+                            <h3>AI Safety Guide</h3>
+                            <p>Get personalized safety recommendations</p>
+                        </div>
+                        <button class="ai-guide-btn" onclick="openAIGuide()">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </div>
+                    <div class="risk-indicator">
+                        <div class="risk-level low">
+                            <div class="risk-dot"></div>
+                            <span>Low Risk Area</span>
+                        </div>
+                        <p class="risk-text">Current location is safe based on AI analysis</p>
+                    </div>
+                </div>
+
+                <!-- Posts Feed -->
+                <div class="posts-container" id="postsContainer">
+                    <!-- Posts will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- Explore Page -->
+            <div id="explorePage" class="page">
+                <div class="page-header">
+                    <h2>Explore Safe Spaces</h2>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">High Rated</button>
+                        <button class="filter-btn">Recent</button>
+                        <button class="filter-btn">Nearby</button>
+                    </div>
+                </div>
+                <div class="explore-grid" id="exploreGrid">
+                    <!-- Explore content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Safety Page -->
+            <div id="safetyPage" class="page">
+                <div class="safety-dashboard">
+                    <div class="dashboard-header">
+                        <h2>Safety Dashboard</h2>
+                        <div class="current-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Downtown, Seattle</span>
                         </div>
                     </div>
-                    
-                    <div id="map-container" class="map-container">
-                        <div id="google-map" style="width: 100%; height: 400px;"></div>
-                    </div>
-                </div>
-                
-                <!-- Community Section -->
-                <div id="community-section" class="content-section">
-                    <div class="section-header">
-                        <h2>Community Safety Updates</h2>
-                        <button class="share-media-btn">
-                            <i class="fas fa-camera"></i>
-                            Share Media
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="action-btn emergency" onclick="triggerEmergency()">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Emergency Alert</span>
+                        </button>
+                        <button class="action-btn route" onclick="openSafeRoute()">
+                            <i class="fas fa-route"></i>
+                            <span>Safe Route</span>
+                        </button>
+                        <button class="action-btn voice" onclick="activateVoiceAlert()">
+                            <i class="fas fa-microphone"></i>
+                            <span>Voice Alert</span>
                         </button>
                     </div>
-                    
-                    <div class="media-feed" id="media-feed">
-                        <!-- Community posts will be loaded here -->
-                    </div>
-                </div>
-                
-                <!-- Self Defense Section -->
-                <div id="self-defense-section" class="content-section">
-                    <div class="section-header">
-                        <h2>Self Defense Training</h2>
-                        <button class="become-instructor-btn">
-                            <i class="fas fa-plus"></i>
-                            Become an Instructor
-                        </button>
-                    </div>
-                    
-                    <div class="instructor-filters">
-                        <select id="price-filter">
-                            <option value="all">All Prices</option>
-                            <option value="free">Free</option>
-                            <option value="paid">Paid</option>
-                        </select>
-                        <select id="skill-filter">
-                            <option value="all">All Skill Levels</option>
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
-                        </select>
-                    </div>
-                    
-                    <div class="instructors-grid" id="instructors-grid">
-                        <!-- Instructors will be loaded here -->
-                    </div>
-                </div>
-                
-                <!-- Risk Prediction Section -->
-                <div id="risk-prediction-section" class="content-section">
-                    <div class="section-header">
-                        <h2>AI Risk Prediction</h2>
-                    </div>
-                    
-                    <div class="risk-dashboard">
-                        <div class="current-risk">
-                            <h3>Current Risk Level</h3>
-                            <div class="risk-meter">
-                                <div class="risk-level low" id="current-risk-level">
-                                    <span class="risk-text">LOW</span>
-                                    <span class="risk-percentage">25%</span>
-                                </div>
+
+                    <!-- Risk Prediction -->
+                    <div class="prediction-card">
+                        <h3><i class="fas fa-brain"></i> AI Risk Prediction</h3>
+                        <div class="prediction-meter">
+                            <div class="meter-fill" style="width: 25%;"></div>
+                        </div>
+                        <p class="prediction-text">Low risk predicted for next 2 hours</p>
+                        <div class="prediction-factors">
+                            <div class="factor">
+                                <span>Time of day</span>
+                                <div class="factor-indicator safe"></div>
                             </div>
-                        </div>
-                        
-                        <div class="risk-factors">
-                            <h3>Risk Factors</h3>
-                            <div class="factors-list" id="risk-factors">
-                                <!-- Risk factors will be loaded here -->
+                            <div class="factor">
+                                <span>Location history</span>
+                                <div class="factor-indicator safe"></div>
                             </div>
-                        </div>
-                        
-                        <div class="recommendations">
-                            <h3>Safety Recommendations</h3>
-                            <div class="recommendations-list" id="recommendations-list">
-                                <!-- Recommendations will be loaded here -->
+                            <div class="factor">
+                                <span>Crowd density</span>
+                                <div class="factor-indicator moderate"></div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </main>
-        </div>
-    </div>
-    
-    <!-- Modals -->
-    <!-- Search Modal -->
-    <div id="search-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Search</h3>
-                <button class="close-btn">&times;</button>
-            </div>
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="Search locations, users, or safety updates...">
-                <div class="search-filters">
-                    <button class="filter-btn active" data-filter="all">All</button>
-                    <button class="filter-btn" data-filter="locations">Locations</button>
-                    <button class="filter-btn" data-filter="users">Users</button>
-                    <button class="filter-btn" data-filter="posts">Posts</button>
-                </div>
-                <div id="search-results" class="search-results">
-                    <!-- Search results will be displayed here -->
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- AI Guide Modal -->
-    <div id="ai-guide-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>AI Safety Guide</h3>
-                <button class="close-btn">&times;</button>
-            </div>
-            <div class="ai-chat-container">
-                <div id="ai-chat-messages" class="chat-messages">
-                    <div class="ai-message">
-                        <div class="message-avatar">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>Hello! I'm your AI Safety Guide. How can I help you stay safe today?</p>
-                        </div>
+
+                    <!-- Location Ratings -->
+                    <div class="location-ratings" id="locationRatings">
+                        <!-- Location ratings will be loaded here -->
                     </div>
                 </div>
-                <div class="chat-input-container">
-                    <input type="text" id="ai-chat-input" placeholder="Ask me about safety tips, routes, or emergency procedures...">
-                    <button id="send-ai-message" class="send-btn">
-                        <i class="fas fa-paper-plane"></i>
+            </div>
+
+            <!-- Defense Page -->
+            <div id="defensePage" class="page">
+                <div class="page-header">
+                    <h2>Self Defense Training</h2>
+                    <button class="add-instructor-btn" onclick="openAddInstructor()">
+                        <i class="fas fa-plus"></i> Become Instructor
                     </button>
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Emergency Panel Modal -->
-    <div id="emergency-modal" class="modal emergency-modal">
-        <div class="modal-content">
-            <div class="modal-header emergency-header">
-                <h3>Emergency Panel</h3>
-                <button class="close-btn">&times;</button>
-            </div>
-            <div class="emergency-actions">
-                <button id="voice-alert-btn" class="emergency-action-btn">
-                    <i class="fas fa-microphone"></i>
-                    <span>Voice Alert</span>
-                </button>
-                <button id="silent-alert-btn" class="emergency-action-btn">
-                    <i class="fas fa-bell-slash"></i>
-                    <span>Silent Alert</span>
-                </button>
-                <button id="call-police-btn" class="emergency-action-btn">
-                    <i class="fas fa-phone"></i>
-                    <span>Call Police</span>
-                </button>
-                <button id="share-location-btn" class="emergency-action-btn">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Share Location</span>
-                </button>
-            </div>
-            <div class="emergency-contacts">
-                <h4>Emergency Contacts</h4>
-                <div id="emergency-contacts-list" class="contacts-list">
-                    <!-- Emergency contacts will be loaded here -->
-                </div>
-                <button class="add-contact-btn">
-                    <i class="fas fa-plus"></i>
-                    Add Emergency Contact
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Post Creation Modal -->
-    <div id="create-post-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Share Safety Update</h3>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="create-post-form" class="post-form">
-                <textarea placeholder="Share safety information, warnings, or tips..." required></textarea>
-                <input type="text" placeholder="Location" required>
-                <div class="post-options">
-                    <label class="file-upload">
-                        <i class="fas fa-camera"></i>
-                        <span>Add Photo/Video</span>
-                        <input type="file" accept="image/*,video/*" multiple>
-                    </label>
-                    <select required>
-                        <option value="">Safety Level</option>
-                        <option value="safe">Safe</option>
-                        <option value="caution">Caution</option>
-                        <option value="unsafe">Unsafe</option>
-                        <option value="emergency">Emergency</option>
-                    </select>
-                </div>
-                <button type="submit" class="primary-btn">Share Update</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Rating Modal -->
-    <div id="rating-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Rate Location</h3>
-                <button class="close-btn">&times;</button>
-            </div>
-            <form id="rating-form" class="rating-form">
-                <input type="text" placeholder="Location name or address" required>
                 
-                <div class="rating-categories">
-                    <div class="rating-category">
-                        <label>Overall Safety</label>
-                        <div class="star-rating" data-category="overall">
-                            <i class="fas fa-star" data-rating="1"></i>
-                            <i class="fas fa-star" data-rating="2"></i>
-                            <i class="fas fa-star" data-rating="3"></i>
-                            <i class="fas fa-star" data-rating="4"></i>
-                            <i class="fas fa-star" data-rating="5"></i>
-                        </div>
+                <div class="defense-categories">
+                    <button class="category-btn active">All Instructors</button>
+                    <button class="category-btn">Krav Maga</button>
+                    <button class="category-btn">Boxing</button>
+                    <button class="category-btn">Martial Arts</button>
+                    <button class="category-btn">Free Classes</button>
+                </div>
+
+                <div class="instructors-grid" id="instructorsGrid">
+                    <!-- Instructors will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <img src="https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150" alt="Profile">
                     </div>
-                    
-                    <div class="rating-category">
-                        <label>Lighting</label>
-                        <div class="star-rating" data-category="lighting">
-                            <i class="fas fa-star" data-rating="1"></i>
-                            <i class="fas fa-star" data-rating="2"></i>
-                            <i class="fas fa-star" data-rating="3"></i>
-                            <i class="fas fa-star" data-rating="4"></i>
-                            <i class="fas fa-star" data-rating="5"></i>
-                        </div>
-                    </div>
-                    
-                    <div class="rating-category">
-                        <label>Crowd Density</label>
-                        <div class="star-rating" data-category="crowd">
-                            <i class="fas fa-star" data-rating="1"></i>
-                            <i class="fas fa-star" data-rating="2"></i>
-                            <i class="fas fa-star" data-rating="3"></i>
-                            <i class="fas fa-star" data-rating="4"></i>
-                            <i class="fas fa-star" data-rating="5"></i>
+                    <div class="profile-info">
+                        <h2>Sarah Johnson</h2>
+                        <p>@sarah_secure</p>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="stat-number">156</span>
+                                <span class="stat-label">Posts</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">2.1k</span>
+                                <span class="stat-label">Followers</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">4.8</span>
+                                <span class="stat-label">Safety Score</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <textarea placeholder="Share your experience and any safety tips..."></textarea>
-                <button type="submit" class="primary-btn">Submit Rating</button>
-            </form>
-        </div>
-    </div>
-    
-    <!-- Instructor Registration Modal -->
-    <div id="instructor-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Become a Self Defense Instructor</h3>
-                <button class="close-btn">&times;</button>
+
+                <div class="profile-content">
+                    <div class="content-tabs">
+                        <button class="tab-btn active">Posts</button>
+                        <button class="tab-btn">Ratings</button>
+                        <button class="tab-btn">Settings</button>
+                    </div>
+                    <div class="profile-grid" id="profileGrid">
+                        <!-- Profile content will be loaded here -->
+                    </div>
+                </div>
             </div>
-            <form id="instructor-form" class="instructor-form">
-                <input type="text" placeholder="Your Name" required>
-                <input type="text" placeholder="Specialization (e.g., Karate, Krav Maga)" required>
-                <textarea placeholder="Experience and qualifications" required></textarea>
-                <input type="text" placeholder="Location/Area you cover" required>
-                
-                <div class="pricing-options">
-                    <label>
-                        <input type="radio" name="pricing" value="free" required>
-                        <span>Free Classes</span>
-                    </label>
-                    <label>
-                        <input type="radio" name="pricing" value="paid" required>
-                        <span>Paid Classes</span>
-                    </label>
+        </main>
+    </div>
+
+    <!-- AI Guide Chat Modal -->
+    <div id="aiGuideModal" class="modal hidden">
+        <div class="modal-content chat-modal">
+            <div class="chat-header">
+                <div class="chat-avatar">
+                    <i class="fas fa-robot"></i>
                 </div>
-                
-                <div id="price-input" class="hidden">
-                    <input type="number" placeholder="Price per session ($)" min="0">
+                <div class="chat-info">
+                    <h3>AI Safety Guide</h3>
+                    <span class="online-status">Online</span>
                 </div>
-                
-                <select required>
-                    <option value="">Skill Level</option>
-                    <option value="beginner">Beginner</option>
-                    <option value="intermediate">Intermediate</option>
-                    <option value="advanced">Advanced</option>
-                    <option value="all">All Levels</option>
-                </select>
-                
-                <input type="tel" placeholder="Contact Number" required>
-                <input type="email" placeholder="Email Address" required>
-                
-                <button type="submit" class="primary-btn">Register as Instructor</button>
-            </form>
+                <button class="close-chat" onclick="closeAIGuide()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai-message">
+                    <div class="message-content">
+                        Hello! I'm your AI Safety Guide. I can help you with route planning, safety assessments, and emergency guidance. How can I assist you today?
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" placeholder="Ask me about safety..." id="chatInput">
+                <button onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <!-- Firebase Configuration -->
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-storage-compat.js"></script>
-    
-    <script>
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "your-project-id.firebaseapp.com",
-    projectId: "your-project-id",
-    storageBucket: "your-project-id.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
+    <!-- Loading Spinner -->
+    <div id="loadingSpinner" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading SHESECURE...</p>
+    </div>
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-
-  // Global references for auth.js
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-</script>
-
-
-    <!-- Google Maps API -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
-    
-    <!-- Custom Scripts -->
-    <script src="firebase.js"></script>
     <script src="Shesecure.js"></script>
-    <script src="safety-ratings.js"></script>
-    <script src="safe-routes.js"></script>
-    <script src="community.js"></script>
-    <script src="self-defense.js"></script>
-    <script src="risk-prediction.js"></script>
-    <script src="emergency.js"></script>
-    <script src="ai-guide.js"></script>
-    <script src="search.js"></script>
-    <script src="main.js"></script>
 </body>
 </html>
