@@ -8,48 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Auth Section -->
-    <div id="auth-container" class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <h1 class="logo">SHESECURE</h1>
-                <p class="tagline">Your Safety, Our Priority</p>
-            </div>
-            
-            <div class="auth-tabs">
-                <button class="auth-tab active" data-tab="login">Sign In</button>
-                <button class="auth-tab" data-tab="register">Register</button>
-            </div>
-            
-            <form id="auth-form" class="auth-form">
-                <div id="name-field" class="form-group hidden">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="name" placeholder="Full Name" required>
-                </div>
-                
-                <div class="form-group">
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" placeholder="Email Address" required>
-                </div>
-                
-                <div class="form-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="password" placeholder="Password" required>
-                    <button type="button" class="toggle-password">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
-                
-                <div id="confirm-password-field" class="form-group hidden">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="confirmPassword" placeholder="Confirm Password">
-                </div>
-                
-                <button type="submit" class="auth-btn">Sign In</button>
-            </form>
-        </div>
-    </div>
-    
     <!-- Dashboard Section -->
     <div id="dashboard-container" class="dashboard-container hidden">
         <!-- Header -->
@@ -507,7 +465,6 @@
     
     <!-- Custom Scripts -->
     <script src="firebase.js"></script>
-    <script src="auth.js"></script>
     <script src="Shesecure.js"></script>
     <script src="safety-ratings.js"></script>
     <script src="safe-routes.js"></script>
