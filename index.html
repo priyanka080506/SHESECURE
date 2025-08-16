@@ -8,6 +8,29 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
+    <div id="entry-message" style="
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  padding: 12px 18px;
+  border: 2px solid #f87171;
+  border-radius: 8px;
+  font-weight: bold;
+  font-family: sans-serif;
+  z-index: 9999;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+">
+  Just click on the wrong mark you will entered to the website
+</div>
+
+<script>
+  setTimeout(() => {
+    const msg = document.getElementById('entry-message');
+    if (msg) msg.remove();
+  }, 4000); // disappears after 4 seconds
+</script>
     <!-- Auth Modal -->
     <div id="authModal" class="modal hidden">
         <div class="modal-content">
