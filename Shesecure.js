@@ -780,3 +780,130 @@ window.sendMessage = sendMessage;
 window.toggleLike = toggleLike;
 window.bookInstructor = bookInstructor;
 window.openAddInstructor = openAddInstructor;
+
+// Profile Tab Functions
+function switchProfileTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Load appropriate content
+    switch(tabName) {
+        case 'posts':
+            loadProfilePosts();
+            break;
+        case 'ratings':
+            loadProfileRatings();
+            break;
+        case 'settings':
+            loadProfileSettings();
+            break;
+    }
+}
+
+// Rating Functions
+function editRating(ratingId) {
+    alert(`Editing rating ${ratingId}. This would open an edit form.`);
+}
+
+function deleteRating(ratingId) {
+    if (confirm('Are you sure you want to delete this rating?')) {
+        alert(`Rating ${ratingId} deleted successfully.`);
+        loadProfileRatings(); // Refresh the ratings
+    }
+}
+
+// Settings Functions
+function setupSettingsToggles() {
+    const toggles = document.querySelectorAll('.setting-toggle input[type="checkbox"]');
+    toggles.forEach(toggle => {
+        toggle.addEventListener('change', (e) => {
+            const settingName = e.target.id;
+            const isEnabled = e.target.checked;
+            handleSettingChange(settingName, isEnabled);
+        });
+    });
+}
+
+function handleSettingChange(settingName, isEnabled) {
+    console.log(`${settingName} ${isEnabled ? 'enabled' : 'disabled'}`);
+    
+    // Show feedback to user
+    const message = isEnabled ? 'enabled' : 'disabled';
+    showSettingFeedback(`${settingName.replace(/([A-Z])/g, ' $1').toLowerCase()} ${message}`);
+}
+
+function showSettingFeedback(message) {
+    // Create temporary feedback element
+    const feedback = document.createElement('div');
+    feedback.className = 'setting-feedback';
+    feedback.textContent = `Setting ${message}`;
+    feedback.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: #10B981;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 10px;
+        z-index: 1000;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    document.body.appendChild(feedback);
+    
+    setTimeout(() => {
+        feedback.remove();
+    }, 3000);
+}
+
+function editProfile() {
+    alert('Profile editing would open a form to update:\n• Name\n• Email\n• Phone\n• Bio\n• Profile Picture');
+}
+
+function changePassword() {
+    alert('Password change form would open with:\n• Current Password\n• New Password\n• Confirm Password');
+}
+
+function emailSettings() {
+    alert('Email preferences would allow you to:\n• Choose notification frequency\n• Select email types\n• Unsubscribe options');
+}
+
+function manageEmergencyContacts() {
+    alert('Emergency contacts management:\n• Add/Remove contacts\n• Set priority levels\n• Test contact methods\n• Backup contacts');
+}
+
+function openHelpCenter() {
+    alert('Help Center would include:\n• FAQ\n• Video tutorials\n• Contact support\n• Safety tips');
+}
+
+function openPrivacyPolicy() {
+    alert('Privacy Policy would detail:\n• Data collection\n• Usage policies\n• Third-party sharing\n• User rights');
+}
+
+function openTerms() {
+    alert('Terms of Service would cover:\n• User responsibilities\n• Platform rules\n• Liability\n• Service availability');
+}
+
+function deleteAccount() {
+    if (confirm('⚠️ WARNING: This will permanently delete your account and all data.\n\nThis action cannot be undone. Are you sure?')) {
+        if (confirm('Final confirmation: Delete account permanently?')) {
+            alert('Account deletion initiated. You will receive a confirmation email within 24 hours.');
+        }
+    }
+}
+
+// Export new functions
+window.switchProfileTab = switchProfileTab;
+window.editRating = editRating;
+window.deleteRating = deleteRating;
+window.editProfile = editProfile;
+window.changePassword = changePassword;
+window.emailSettings = emailSettings;
+window.manageEmergencyContacts = manageEmergencyContacts;
+window.openHelpCenter = openHelpCenter;
+window.openPrivacyPolicy = openPrivacyPolicy;
+window.openTerms = openTerms;
+window.deleteAccount = deleteAccount;

@@ -1381,4 +1381,36 @@ body {
     .instructor-info {
         padding: 15px;
     }
+    
+    .profile-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 10px;
+    }
+    
+    .settings-title {
+        padding: 15px;
+        font-size: 16px;
+    }
+    
+    .setting-item {
+        padding: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .setting-toggle,
+    .setting-select,
+    .setting-btn {
+        align-self: flex-end;
+    }
+    
+    .rating-content {
+        padding: 15px;
+    }
+    
+    .rating-metrics {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 }
