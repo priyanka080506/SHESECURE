@@ -603,72 +603,114 @@ class Dashboard {
     }
 
     calculateSafeRoute(directionsService, directionsRenderer) {
-        const start = document.getElementById('start-location').value;
-        const end = document.getElementById('end-location').value;
+  const start = document.getElementById('start-location').value;
+  const end = document.getElementById('end-location').value;
 
-        if (!start || !end) {
-            alert('Please enter both starting location and destination');
-            return;
-        }
+  const avoidDarkAreas = document.getElementById('avoid-dark-areas').checked;
+  const preferCrowded = document.getElementById('prefer-crowded').checked;
+  const avoidIncidents = document.getElementById('avoid-incidents').checked;
 
-        directionsService.route({
-            origin: start,
-            destination: end,
-            travelMode: google.maps.TravelMode.WALKING,
-            avoidHighways: true,
-            avoidTolls: true
-        }, (response, status) => {
-            if (status === 'OK') {
-                directionsRenderer.setDirections(response);
-                
-                // In a real app, this would analyze the route for safety factors
-                this.analyzeRouteSafety(response);
-            } else {
-                alert('Directions request failed: ' + status);
-            }
-        });
+  if (!start || !end) {
+    alert('Please enter both starting location and destination');
+    return;
+  }
+
+  // these preferences to adjust route logic or scoring
+  this.userPreferences = { avoidDarkAreas, preferCrowded, avoidIncidents };
+
+  directionsService.route({
+    origin: start,
+    destination: end,
+    travelMode: google.maps.TravelMode.WALKING,
+    avoidHighways: true,
+    avoidTolls: true
+  }, (response, status) => {
+    if (status === 'OK') {
+      directionsRenderer.setDirections(response);
+      this.analyzeRouteSafety(response);
+    } else {
+      alert('Directions request failed: ' + status);
     }
-
-    analyzeRouteSafety(route) {
-        // Simulate safety analysis
-        const safetyScore = Math.random() * 100;
-        let safetyLevel, message, color;
-
-        if (safetyScore > 75) {
-            safetyLevel = 'High';
-            message = 'This route is well-lit and frequently traveled.';
-            color = '#22c55e';
-        } else if (safetyScore > 50) {
-            safetyLevel = 'Medium';
-            message = 'This route has some areas with lower lighting.';
-            color = '#f59e0b';
-        } else {
-            safetyLevel = 'Low';
-            message = 'Consider taking an alternative route or transportation.';
-            color = '#ef4444';
-        }
-
-        // Show safety analysis
-        const analysisDiv = document.createElement('div');
-        analysisDiv.innerHTML = `
-            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid ${color};">
-                <h4>Route Safety Analysis</h4>
-                <p><strong>Safety Level:</strong> <span style="color: ${color};">${safetyLevel}</span></p>
-                <p>${message}</p>
-                <p><strong>Estimated walking time:</strong> ${route.routes[0].legs[0].duration.text}</p>
-            </div>
-        `;
-
-        const mapContainer = document.getElementById('map-container');
-        const existingAnalysis = mapContainer.querySelector('.route-analysis');
-        if (existingAnalysis) {
-            existingAnalysis.remove();
-        }
-        
-        analysisDiv.className = 'route-analysis';
-        mapContainer.appendChild(analysisDiv);
-    }
+  });
 }
+
+analyzeRouteSafety(route) {
+  const prefs = this.userPreferences || {};
+  const hour = new Date().getHours();
+  const isNight = hour < 6 || hour > 18;
+
+  // Base safety score logic
+  let safetyScore = 60;
+  if (prefs.avoidDarkAreas) safetyScore += 10;
+  if (prefs.preferCrowded) safetyScore += 10;
+  if (prefs.avoidIncidents) safetyScore += 10;
+  if (isNight) safetyScore -= 20;
+  safetyScore += Math.random() * 10;
+
+  // Determine safety level
+  let safetyLevel, message, color, emoji;
+  if (safetyScore > 75) {
+    safetyLevel = 'High';
+    message = '🟢 This route is well-lit and frequently traveled.';
+    color = '#22c55e';
+    emoji = '🟢';
+  } else if (safetyScore > 50) {
+    safetyLevel = 'Medium';
+    message = '🟠 This route has some areas with lower lighting or fewer people.';
+    color = '#f59e0b';
+    emoji = '🟠';
+  } else {
+    safetyLevel = 'Low';
+    message = '🔴 Consider taking an alternative route or using a safer mode of transport.';
+    color = '#ef4444';
+    emoji = '🔴';
+  }
+
+  // Store route details for reporting
+  this.lastRouteDetails = {
+    start: document.getElementById('start-location').value,
+    end: document.getElementById('end-location').value,
+    duration: route.routes[0].legs[0].duration.text,
+    safetyScore,
+    safetyLevel,
+    preferences: prefs
+  };
+
+  // Create analysis UI
+  const analysisDiv = document.createElement('div');
+  analysisDiv.className = 'route-analysis';
+  analysisDiv.innerHTML = `
+    <div style="background: #fff; padding: 16px; border-radius: 8px; margin-top: 20px; border-left: 5px solid ${color}; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+      <h3 style="margin-bottom: 10px;">Route Safety Analysis</h3>
+      <p><strong>Safety Level:</strong> <span style="color: ${color}; font-weight: bold;">${emoji} ${safetyLevel}</span></p>
+      <p>${message}</p>
+      <p><strong>Estimated Walking Time:</strong> ${this.lastRouteDetails.duration}</p>
+      <p><strong>Your Preferences:</strong></p>
+      <ul>
+        <li>Avoid dark areas: ${prefs.avoidDarkAreas ? '✅' : '❌'}</li>
+        <li>Prefer crowded areas: ${prefs.preferCrowded ? '✅' : '❌'}</li>
+        <li>Avoid recent incidents: ${prefs.avoidIncidents ? '✅' : '❌'}</li>
+      </ul>
+      <button onclick="dashboard.reportUnsafeRoute()" style="margin-top: 12px; padding: 10px 14px; background-color: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">🚨 Report Unsafe</button>
+    </div>
+  `;
+
+  const mapContainer = document.getElementById('map-container');
+  const existingAnalysis = mapContainer.querySelector('.route-analysis');
+  if (existingAnalysis) {
+    existingAnalysis.remove();
+  }
+
+  mapContainer.appendChild(analysisDiv);
+}
+
+reportUnsafeRoute() {
+  alert("Thanks for your feedback. We'll review this route.");
+}
+}
+document.getElementById('find-safe-route').addEventListener('click', () => {
+  dashboard.calculateSafeRoute(directionsService, directionsRenderer);
+});
 
 // Initialize dashboard
 window.dashboard = new Dashboard();
