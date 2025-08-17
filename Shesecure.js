@@ -34,7 +34,7 @@ const mockUserPosts = [
             avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
         },
         location: "Pike Place Market, Seattle",
-        image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "marketpost.jpeg",
         caption: "Amazing security presence and well-lit pathways! Perfect for evening shopping 🛍️ #SafeShopping #Seattle",
         likes: 89,
         comments: 12,
@@ -50,7 +50,7 @@ const mockUserPosts = [
             avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
         },
         location: "Capitol Hill, Seattle",
-        image: "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "hill.jpeg",
         caption: "Beautiful park area but could use better lighting after sunset. Stay aware! 🌅 #CapitolHill #SafetyFirst",
         likes: 156,
         comments: 28,
@@ -66,7 +66,7 @@ const mockUserPosts = [
             avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
         },
         location: "University District",
-        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "universitypost.jpeg",
         caption: "Great campus security and emergency call boxes everywhere! Feeling safe here 📚 #UDistrict #CampusSafety",
         likes: 234,
         comments: 45,
@@ -82,7 +82,7 @@ const mockUserPosts = [
             avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
         },
         location: "Waterfront Park",
-        image: "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "waterpark.jpeg",
         caption: "Stunning waterfront views with excellent visibility and regular patrols 🌊 #Waterfront #SafeViews",
         likes: 178,
         comments: 22,
@@ -97,7 +97,7 @@ const mockUserRatings = [
     {
         id: 1,
         location: "Pike Place Market",
-        image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "marketpost.jpeg",
         rating: 4.7,
         lighting: 4.8,
         crowdDensity: 4.5,
@@ -109,7 +109,7 @@ const mockUserRatings = [
     {
         id: 2,
         location: "Capitol Hill Park",
-        image: "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "hill.jpeg",
         rating: 3.8,
         lighting: 3.2,
         crowdDensity: 4.1,
@@ -121,7 +121,7 @@ const mockUserRatings = [
     {
         id: 3,
         location: "University District",
-        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "universitypost.jpeg",
         rating: 4.9,
         lighting: 4.9,
         crowdDensity: 4.8,
@@ -133,7 +133,7 @@ const mockUserRatings = [
     {
         id: 4,
         location: "Waterfront Pier",
-        image: "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "waterpark.jpeg",
         rating: 4.4,
         lighting: 4.6,
         crowdDensity: 3.9,
@@ -145,7 +145,7 @@ const mockUserRatings = [
     {
         id: 5,
         location: "Downtown Transit Hub",
-        image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400",
+        image: "hillpost.jpeg",
         rating: 3.5,
         lighting: 3.8,
         crowdDensity: 4.2,
