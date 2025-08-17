@@ -775,50 +775,83 @@ function bookInstructor(instructorId) {
 function loadProfile() {
     const container = document.getElementById('profileGrid');
     if (!container) return;
-    
-    // Load user's posts in grid format
+
     container.innerHTML = '';
-    
-    const userPosts = posts.filter(post => post.user.name === currentUser?.name);
-    userPosts.forEach(post => {
+
+    const userPosts = mockUserPosts.filter(post => post.user.name === "Sara");
+
+    if (userPosts.length > 0) {
+      userPosts.forEach(post => {
         const postElement = document.createElement('div');
         postElement.className = 'profile-post';
         postElement.style.cssText = `
-            aspect-ratio: 1;
-            background-image: url(${post.image});
-            background-size: cover;
-            background-position: center;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+          aspect-ratio: 1;
+          background-image: url(${post.image});
+          background-size: cover;
+          background-position: center;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: transform 0.3s ease;
         `;
         postElement.addEventListener('mouseover', () => {
-            postElement.style.transform = 'scale(1.05)';
+          postElement.style.transform = 'scale(1.05)';
         });
         postElement.addEventListener('mouseout', () => {
-            postElement.style.transform = 'scale(1)';
+          postElement.style.transform = 'scale(1)';
         });
-        container.appendChild(postElement);
-    });
-    
-    // Add some placeholder posts
-    for (let i = 0; i < 6; i++) {
+container.appendChild(postElement);
+      });
+    } else {
+      for (let i = 0; i < 6; i++) {
         const postElement = document.createElement('div');
         postElement.className = 'profile-post';
         postElement.style.cssText = `
-            aspect-ratio: 1;
-            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 24px;
+          aspect-ratio: 1;
+          background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #999;
+          font-size: 24px;
         `;
         postElement.innerHTML = '<i class="fas fa-image"></i>';
         container.appendChild(postElement);
+      }
     }
-}
+  }
+
+document.getElementById("addPostBtn").addEventListener("click", () => {
+    const caption = prompt("Enter your post caption:");
+    const image = prompt("Enter image URL:");
+    const location = prompt("Enter location:");
+
+    if (caption && image && location) {
+      const newPost = {
+        id: Date.now(),
+        user: {
+          name: "Sara",
+          username: "sarah_secure",
+          avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location,
+        image,
+        caption,
+        likes: 0,
+        comments: 0,
+        safetyRating: 0,
+        timestamp: "Just now",
+        isLiked: false
+      };
+
+      mockUserPosts.unshift(newPost);
+      loadProfile();
+    }
+  });
+
+  // ✅ Initial load
+  loadProfile();
+
 
 // Emergency Functions
 function triggerEmergency() {
