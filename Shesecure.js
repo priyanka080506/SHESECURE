@@ -24,6 +24,223 @@ const mockUsers = [
     }
 ];
 
+// Mock user posts for profile
+const mockUserPosts = [
+    {
+        id: 101,
+        user: {
+            name: "Sara",
+            username: "sarah_secure",
+            avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location: "Pike Place Market, Seattle",
+        image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400",
+        caption: "Amazing security presence and well-lit pathways! Perfect for evening shopping 🛍️ #SafeShopping #Seattle",
+        likes: 89,
+        comments: 12,
+        safetyRating: 4.7,
+        timestamp: "3 days ago",
+        isLiked: true
+    },
+    {
+        id: 102,
+        user: {
+            name: "Sara",
+            username: "sarah_secure",
+            avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location: "Capitol Hill, Seattle",
+        image: "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=400",
+        caption: "Beautiful park area but could use better lighting after sunset. Stay aware! 🌅 #CapitolHill #SafetyFirst",
+        likes: 156,
+        comments: 28,
+        safetyRating: 3.8,
+        timestamp: "1 week ago",
+        isLiked: false
+    },
+    {
+        id: 103,
+        user: {
+            name: "Sara",
+            username: "sarah_secure",
+            avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location: "University District",
+        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        caption: "Great campus security and emergency call boxes everywhere! Feeling safe here 📚 #UDistrict #CampusSafety",
+        likes: 234,
+        comments: 45,
+        safetyRating: 4.9,
+        timestamp: "2 weeks ago",
+        isLiked: true
+    },
+    {
+        id: 104,
+        user: {
+            name: "Sara",
+            username: "sarah_secure",
+            avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150"
+        },
+        location: "Waterfront Park",
+        image: "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=400",
+        caption: "Stunning waterfront views with excellent visibility and regular patrols 🌊 #Waterfront #SafeViews",
+        likes: 178,
+        comments: 22,
+        safetyRating: 4.4,
+        timestamp: "3 weeks ago",
+        isLiked: true
+    }
+];
+
+// Mock user ratings
+const mockUserRatings = [
+    {
+        id: 1,
+        location: "Pike Place Market",
+        image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.7,
+        lighting: 4.8,
+        crowdDensity: 4.5,
+        safetyScore: 4.7,
+        review: "Excellent security presence and well-maintained area. Perfect for day and evening visits. Highly recommend!",
+        timestamp: "3 days ago",
+        category: "Shopping"
+    },
+    {
+        id: 2,
+        location: "Capitol Hill Park",
+        image: "https://images.pexels.com/photos/378570/pexels-photo-378570.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 3.8,
+        lighting: 3.2,
+        crowdDensity: 4.1,
+        safetyScore: 3.8,
+        review: "Beautiful area during the day but lighting could be improved for evening hours. Generally safe with good foot traffic.",
+        timestamp: "1 week ago",
+        category: "Park"
+    },
+    {
+        id: 3,
+        location: "University District",
+        image: "https://images.pexels.com/photos/1454360/pexels-photo-1454360.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.9,
+        lighting: 4.9,
+        crowdDensity: 4.8,
+        safetyScore: 4.9,
+        review: "Outstanding campus security with emergency call boxes every 100 meters. Feels very safe at all hours.",
+        timestamp: "2 weeks ago",
+        category: "Educational"
+    },
+    {
+        id: 4,
+        location: "Waterfront Pier",
+        image: "https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 4.4,
+        lighting: 4.6,
+        crowdDensity: 3.9,
+        safetyScore: 4.4,
+        review: "Great visibility and regular security patrols. Perfect for morning jogs and evening walks.",
+        timestamp: "3 weeks ago",
+        category: "Recreation"
+    },
+    {
+        id: 5,
+        location: "Downtown Transit Hub",
+        image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400",
+        rating: 3.5,
+        lighting: 3.8,
+        crowdDensity: 4.2,
+        safetyScore: 3.5,
+        review: "Busy area with good lighting but can get crowded during rush hours. Stay alert and keep belongings secure.",
+        timestamp: "1 month ago",
+        category: "Transit"
+    }
+];
+
+// Mock route data
+const mockRoutes = {
+    "Mysure palace to University": [
+        {
+            id: 1,
+            name: "Safe Route (Recommended)",
+            duration: "18 minutes",
+            distance: "2.3 miles",
+            safetyScore: 4.8,
+            type: "safe",
+            description: "Well-lit streets with regular security patrols",
+            waypoints: ["Mysure palace", "1st Avenue", "vontikoppal", "BMH", "15th Avenue", "University"],
+            warnings: [],
+            benefits: ["Excellent lighting", "High foot traffic", "Security cameras", "Emergency call boxes"],
+            riskLevel: "Low"
+        },
+        {
+            id: 2,
+            name: "Fast Route",
+            duration: "12 minutes",
+            distance: "1.8 miles",
+            safetyScore: 3.2,
+            type: "fast",
+            description: "Shortest route but passes through less monitored areas",
+            waypoints: ["Mysure palace", "Alley Way", "2nd Avenue", "Construction Zone", "University"],
+            warnings: ["Poor lighting on 2nd Avenue", "Construction zone with limited visibility", "Low foot traffic after 8 PM"],
+            benefits: ["Shortest distance", "Less traffic"],
+            riskLevel: "Moderate"
+        },
+        {
+            id: 3,
+            name: "Heavy Traffic Route",
+            duration: "25 minutes",
+            distance: "2.1 miles",
+            safetyScore: 4.1,
+            type: "traffic",
+            description: "Main roads with heavy traffic congestion",
+            waypoints: ["Pike Place Market", "1st Avenue", "Metropool", "I-5 Overpass", "BMH", "University District"],
+            warnings: ["Heavy traffic congestion", "Air pollution", "Noise levels"],
+            benefits: ["Well-monitored roads", "Good lighting", "Emergency services nearby"],
+            riskLevel: "Low-Moderate"
+        }
+    ],
+    "Downtown Shopping Mall to Central Park": [
+        {
+            id: 4,
+            name: "Safe Route (Recommended)",
+            duration: "22 minutes",
+            distance: "2.8 miles",
+            safetyScore: 4.9,
+            type: "safe",
+            description: "Premium safety route through monitored business district",
+            waypoints: ["Downtown Mall", "Business District", "Security Plaza", "Park Avenue", "Central Park"],
+            warnings: [],
+            benefits: ["24/7 security monitoring", "Premium lighting", "Emergency stations", "High-end area"],
+            riskLevel: "Very Low"
+        },
+        {
+            id: 5,
+            name: "Fast Route",
+            duration: "15 minutes",
+            distance: "2.2 miles",
+            safetyScore: 2.8,
+            type: "fast",
+            description: "Direct route through industrial area",
+            waypoints: ["Downtown Mall", "Industrial District", "Warehouse Area", "Central Park"],
+            warnings: ["Industrial area with limited lighting", "Low pedestrian traffic", "Isolated sections"],
+            benefits: ["Direct path", "Less crowded"],
+            riskLevel: "High"
+        },
+        {
+            id: 6,
+            name: "Scenic Route",
+            duration: "28 minutes",
+            distance: "3.1 miles",
+            safetyScore: 4.3,
+            type: "traffic",
+            description: "Longer route through residential neighborhoods",
+            waypoints: ["Downtown Mall", "Residential Area", "Community Center", "School Zone", "Central Park"],
+            warnings: ["Longer duration", "School zone traffic during peak hours"],
+            benefits: ["Family-friendly areas", "Community presence", "Well-maintained sidewalks"],
+            riskLevel: "Low"
+        }
+    ]
+};
 const mockPosts = [
     {
         id: 1,
@@ -907,3 +1124,6 @@ window.openHelpCenter = openHelpCenter;
 window.openPrivacyPolicy = openPrivacyPolicy;
 window.openTerms = openTerms;
 window.deleteAccount = deleteAccount;
+window.closeRouteModal = closeRouteModal;
+window.calculateRoutes = calculateRoutes;
+window.selectRoute = selectRoute;
