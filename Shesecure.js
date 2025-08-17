@@ -767,7 +767,7 @@ function createInstructorCard(instructor) {
 function bookInstructor(instructorId) {
     const instructor = instructors.find(i => i.id === instructorId);
     if (instructor) {
-        alert(`Booking session with ${instructor.name}. You'll be redirected to the booking page.`);
+        alert(`Booking session with ${instructor.name}. You'll be informed shortly via your phone number.`);
     }
 }
 
